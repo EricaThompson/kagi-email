@@ -11,6 +11,14 @@ a {
     text-decoration: none;
 }
 
+span {
+    font-weight: bold;
+}
+
+.body-style {
+    font-weight: lighter;
+}
+
 .container {
     width: 95vw;
     padding: 10px;
@@ -77,7 +85,6 @@ tr:hover {
 td {
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .sender {
@@ -112,3 +119,10 @@ td {
     border: 1px solid;
 }
 
+.collapse {
+    white-space: nowrap;
+}
+
+.expand-email {
+    white-space: wrap;
+}
