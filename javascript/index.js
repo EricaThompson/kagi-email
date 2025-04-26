@@ -1,6 +1,6 @@
 const emails = [
     ["tina", "getting into it", "this is an email"],
-    ["nina", "today", "another email"], 
+    ["nina", "today", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."], 
     ["celine", "if only", "final email"],
     ["tina", "season's greetings", "this is an email"],
     ["nina", "goodnight", "another email"], 
@@ -13,40 +13,19 @@ const emails = [
 // const from = document.getElementById("from")
 
 emails.map(([sender, subject, body])=> {
-  const eachEmail = document.createElement("tbody");
+  const eachEmail = document.createElement("tr");
   eachEmail.classList.add("each-email")
   eachEmail.innerHTML = `
-                <tr class="raise">
                   <td class="sender">
                     ${sender}
                   </td>
-                  <td class="subject" >
-                    ${subject} - 
+                  
+                  <td >
+                    <div class="subject-message">${subject} - ${body}</div>
                   </td>
-                  <td class="message">${body}</td>
-                </tr>
             `
 
-  table.appendChild(eachEmail);
+  emailBody.appendChild(eachEmail);
 })
 
 
-// emails.map(([sender, subject, body]) => {
-//     const li = document.createElement("li");
-//     li.innerHTML = `<strong>${sender}</strong> `;
-//     from.appendChild(li);
-//   });
-
-// const message = document.getElementById("message")
-
-// emails.map(([sender, subject, body]) => {
-//     const li = document.createElement("li");
-//     li.innerHTML = `<strong>${subject}</strong> -- <small>${body}</small>`;
-//     message.appendChild(li);
-// });
-
-emails.map(() => {
-  const separator = document.createElement("div");
-  separator.innerHTML = `<div></div>`
-  line.appendChild(separator)
-})

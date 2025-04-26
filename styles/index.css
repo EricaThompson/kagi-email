@@ -1,6 +1,5 @@
 * {
     font-family: Arial, Helvetica, sans-serif;
-    /* background-color: #18181A; */
     color: #D1D1D1;
 }
 
@@ -13,12 +12,9 @@ a {
 }
 
 .container {
-    /* height: 80vh; */
     width: 95vw;
     padding: 10px;
 
-    /* background-color: #F5F5F5; */
-    
 }
 
 .inbox {
@@ -26,8 +22,6 @@ a {
     border: 1px solid #D1D1D1;
     border-radius: 3%;
     margin-top: 15px;
-    /* padding: 5px; */
-    /* height: 100vh; */
     background-color: #2a2a2d;
 }
 
@@ -35,16 +29,12 @@ a {
     display: flex;
 }
 
-/* table {
-    border-spacing: 10px;
-} */
 
 .search {
     width: 100%;
     height: 45px;
     border-radius: 25px;
     text-align: right;
-    /* padding-right: 25px; */
     font-size: 2rem;
 }
 
@@ -62,72 +52,63 @@ table {
     border: 1px solid;
     border-radius: 25px;
     width: 100%;
-    padding: 20px;
+    padding: 20px 21px;
     margin-top: 20px;
+    table-layout: fixed;
+    width: 100%;
+    background-color: #252529;
 }
 
 tr {
-    border-bottom: 1px solid;
+    border-bottom: 1px solid #d1d1d13b;
     width: 100%;
     margin: 5px;
+    margin-bottom: 7px;
+    padding: 10px;
+    box-shadow: none;
 }
 
 tr:hover {
-    background-color: white;
+    border-bottom: 1px solid #fcb419;
+
+    cursor: pointer;
 }
 
-/* td {
-    border: 1px solid pink;
-} */
+td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 .sender {
     width: 100px;
     font-weight: bold;
+    flex-shrink: 0;
 }
 
 .subject {
     font-weight: bold;
 }
 
-.message {
+.subject-message {
     font-weight: lighter;
+    text-overflow: ellipsis;
+    overflow:hidden;
 }
 
-/* .subject {
-    padding-left: 20px;
-    text-align: left;
-} */
-
-/* ul {
-    list-style: none;
-    background-color: transparent;
-}
-
-li {
-    margin: 10px;
-    background-color: transparent;
-    /* border-bottom: 1px solid; */
-    /* padding-bottom: 4px;
-} */
 
 #from {
     background-color: transparent;
 }
 
 #message {
-    /* position: absolute;
-    top: 160px;
-    right: 150px; */
     margin-left: 2vw;
     background-color: transparent;
 
 }
 
 #line {
-    /* display: block; */
     border-bottom: 1px solid;
-    /* width: 100%; */
     border: 1px solid;
 }
 
-/* .search  */
