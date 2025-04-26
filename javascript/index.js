@@ -1,19 +1,27 @@
 const emails = [
-    ["tina", "mark", "this is an email"],
-    ["nina", "stu", "another email"], 
-    ["celine", "solo", "final email"]
-    ["tina", "mark", "this is an email"],
-    ["nina", "stu", "another email"], 
-    ["celine", "solo", "final email"]
-    ["tina", "mark", "this is an email"],
-    ["nina", "stu", "another email"], 
-    ["celine", "solo", "final email"]
+    ["tina", "getting into it", "this is an email"],
+    ["nina", "today", "another email"], 
+    ["celine", "if only", "final email"],
+    ["tina", "season's greetings", "this is an email"],
+    ["nina", "goodnight", "another email"], 
+    ["celine", "weather update", "final email"],
+    ["tina", "time for sunset", "this is an email"],
+    ["nina", "leaves are here", "another email"], 
+    ["celine", "spring's on the way", "final email"]
 ]
 
-const inbox = document.getElementById("inbox")
+// const from = document.getElementById("from")
 
-emails.map(([from, body]) => {
+emails.map(([sender, subject, body]) => {
     const li = document.createElement("li");
-    li.innerHTML = `<strong>${from}</strong>  |  ${body}`;
-    inbox.appendChild(li);
+    li.innerHTML = `<strong>${sender}</strong> `;
+    from.appendChild(li);
+  });
+
+// const message = document.getElementById("message")
+
+emails.map(([from, subject, body]) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<strong>${subject}</strong> -- <small>${body}</small>`;
+    message.appendChild(li);
   });
