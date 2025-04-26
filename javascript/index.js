@@ -10,7 +10,6 @@ const emails = [
     ["celine", "spring's on the way", "final email"]
 ]
 
-// const from = document.getElementById("from")
 
 emails.map(([sender, subject, body])=> {
   const eachEmail = document.createElement("tr");

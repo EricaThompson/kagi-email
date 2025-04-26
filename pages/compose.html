@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="styles/compose.css">
+    <link rel="stylesheet" href="/styles/compose.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
 <body>
-    <button class="back-btn"><a href="../index.html">⬅️</a></button>
+    <h1>Kagi ✉️</h1>
+    <button class="back-btn"><a href="../index.html">←</a></button>
+    <section class="container">
+        <form action="submit" class="form-container">
+            <section class="compose-body">
+                <div><input type="email" class="to" placeholder="to:"></div>
+                <div><input type="text" class="to" placeholder="subject:"></div>
+                <div class="compose-container"><textarea type="text" class="body" placeholder="compose:"></textarea></div>
+                <button class="send-btn">send</button>
+            </section>
+        </form>
+    </section>
     
 </body>
 </html>
