@@ -1,12 +1,13 @@
-const tls = require('tls')
+const net = require("net");
+const port = 5197;
 
-const options = {
-    host: 'imap.gmail.com',
-    port: 993,
-    //! testing
-    rejectUnauthorized: false
-}
+const server = net.createServer((socket) => {
+    console.log(`server connected`)
 
-const client = tls.connect(options, () => {
-    console.log('Connected to srever');
+    socket.write('hello world');
+});
+
+
+server.listen(port, () => {
+    console.log(`server running on port ${port}`)
 })
