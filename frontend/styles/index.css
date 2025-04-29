@@ -188,9 +188,20 @@ td {
     text-overflow: ellipsis;
 }
 
-.sender {
-    width: 115px;
+td:nth-child(2) {
+    width:80%;
     margin-right: 20px;
+}
+
+td:nth-child(3) {
+    text-align: left;
+}
+
+
+
+.sender {
+    width: 20%;
+    /* margin-right: 20px; */
     font-weight: bold;
     flex-shrink: 0;
 }
@@ -202,7 +213,8 @@ td {
 .subject-message {
     font-weight: lighter;
     text-overflow: ellipsis;
-    overflow:hidden;
+    overflow: hidden;
+    padding-right: 20px;
 }
 
 .date {
