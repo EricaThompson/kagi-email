@@ -205,6 +205,10 @@ td {
     overflow:hidden;
 }
 
+.date {
+    flex-shrink: 0;
+}
+
 
 #from {
     background-color: transparent;

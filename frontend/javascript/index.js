@@ -1,11 +1,12 @@
 import emails from "../../backend/data/emails.js"
 
-emails.map(([sender, subject, body])=> {
+emails.map(([sender, date, subject, body])=> {
 
   const eachEmail = document.createElement("tr");
   eachEmail.classList.add("each-email")
   eachEmail.innerHTML = `<td class="sender">${sender} </td>
-                        <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>`
+                        <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+                        <td class="date">${date} </td>`
   eachEmail.classList.add("collapse")
   eachEmail.addEventListener("click", () => {
     eachEmail.classList.toggle("expand-email")
