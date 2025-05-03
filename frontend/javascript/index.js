@@ -1,43 +1,24 @@
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-
+let sent = false
+let inbox = true
 let emails;
-(async function emailsOnLoad(){
-  try {
-    const res = await fetch ('http://localhost:5197/emails');
-    const data = await res.json();
-    emails = data
-    console.log('fetch: ', data)
-
-    emailBody.innerHTML = " "
-    
-    data.map(({ body, date, id, sender, subject })=> {
-      const eachEmail = document.createElement("tr");
-      eachEmail.classList.add("each-email")
-      eachEmail.innerHTML = `<td class="sender">${sender} </td>
-                            <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-                            <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
-      eachEmail.classList.add("collapse")
-      eachEmail.addEventListener("click", () => {
-        eachEmail.classList.toggle("expand-email")
-      })
-    
-      emailBody.appendChild(eachEmail);
-    })
-
-  } catch (err) {
-    console.log('fetch err: ', err)
-  }
-})()
 
 const inboxTab = document.getElementById("inbox")
 const sentTab = document.getElementById("sent")
+inboxTab.classList.add("selected")
 inboxTab.addEventListener("click", ()=>{
+  inbox = true
+  sent = false
   inboxTab.classList.add("selected")
   sentTab.classList.remove("selected")
+  fetchEmails();
 })
 sentTab.addEventListener("click", ()=>{
+  sent = true
+  inbox = false
   sentTab.classList.add("selected")
   inboxTab.classList.remove("selected")
+  fetchEmails();
 })
 
 console.log("mailbox: ", inbox, sent)
@@ -46,7 +27,7 @@ console.log("mailbox: ", inbox, sent)
 async function fetchEmails(){
   if (inbox){
     try {
-      const res = await fetch ('http://localhost:5197/emails');
+      const res = await fetch ('http://localhost:5197/inbox');
       const data = await res.json();
       emailBody.innerHTML = ""
       data.map(({ body, date, id, sender, subject })=> {
@@ -66,6 +47,28 @@ async function fetchEmails(){
     } catch (err) {
       console.log('fetch err: ', err)
     }
+  } else if (sent) {
+    try {
+      const res = await fetch ('http://localhost:5197/sent');
+      const data = await res.json();
+      emailBody.innerHTML = ""
+      data.map(({ body, date, id, sender, subject, to })=> {
+
+        const eachEmail = document.createElement("tr");
+        eachEmail.classList.add("each-email")
+        eachEmail.innerHTML = `<td class="to"><span class="to-label">To:</span> ${to} </td>
+                              <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+                              <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
+        eachEmail.classList.add("collapse")
+        eachEmail.addEventListener("click", () => {
+          eachEmail.classList.toggle("expand-email")
+        })
+      
+        emailBody.appendChild(eachEmail);
+      })
+    } catch (err) {
+      console.log('fetch err: ', err)
+    }
   }
 }
 
@@ -73,7 +76,7 @@ async function sendEmail(e) {
   e.preventDefault();
 
   const to = e.target.querySelector('input[type="email"]').value || "you@you.com"
-  const subject = e.target.querySelector('input[type="text"]').value || "this is a subject"
+  const subject = e.target.querySelector('input[type="text"]').value || "🐣 this is a subject"
   const body = e.target.querySelector('textarea').value || "that is the email body"
 
   try {
@@ -127,3 +130,5 @@ emailForm.addEventListener("submit", sendEmail)
 closeBtn.addEventListener("click", () => {
   composeEmail.classList.toggle("show-compose-email")
 })
+
+fetchEmails()
