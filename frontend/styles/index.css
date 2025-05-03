@@ -177,7 +177,8 @@ textarea {
     text-align: center;
 }
 
-.tab:hover {
+
+.tab:hover, .selected {
     background-color: #3E3E41;
 }
 

@@ -29,26 +29,43 @@ let emails;
   }
 })()
 
+const inboxTab = document.getElementById("inbox")
+const sentTab = document.getElementById("sent")
+inboxTab.addEventListener("click", ()=>{
+  inboxTab.classList.add("selected")
+  sentTab.classList.remove("selected")
+})
+sentTab.addEventListener("click", ()=>{
+  sentTab.classList.add("selected")
+  inboxTab.classList.remove("selected")
+})
+
+console.log("mailbox: ", inbox, sent)
+
+
 async function fetchEmails(){
-  try {
-    const res = await fetch ('http://localhost:5197/emails');
-    const data = await res.json();
-    emailBody.innerHTML = ""
-    data.map(({ body, date, id, sender, subject })=> {
-      const eachEmail = document.createElement("tr");
-      eachEmail.classList.add("each-email")
-      eachEmail.innerHTML = `<td class="sender">${sender} </td>
-                            <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-                            <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
-      eachEmail.classList.add("collapse")
-      eachEmail.addEventListener("click", () => {
-        eachEmail.classList.toggle("expand-email")
+  if (inbox){
+    try {
+      const res = await fetch ('http://localhost:5197/emails');
+      const data = await res.json();
+      emailBody.innerHTML = ""
+      data.map(({ body, date, id, sender, subject })=> {
+
+        const eachEmail = document.createElement("tr");
+        eachEmail.classList.add("each-email")
+        eachEmail.innerHTML = `<td class="sender">${sender} </td>
+                              <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+                              <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
+        eachEmail.classList.add("collapse")
+        eachEmail.addEventListener("click", () => {
+          eachEmail.classList.toggle("expand-email")
+        })
+      
+        emailBody.appendChild(eachEmail);
       })
-    
-      emailBody.appendChild(eachEmail);
-    })
-  } catch (err) {
-    console.log('fetch err: ', err)
+    } catch (err) {
+      console.log('fetch err: ', err)
+    }
   }
 }
 
