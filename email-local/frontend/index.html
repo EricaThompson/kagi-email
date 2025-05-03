@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles/index.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Kagi ✉️</h1>
+        <input class="search" type="text" placeholder="🔍">
+        <button id="compose-btn">✍️</button>
+        <div id="compose-email"></div>
+        <section class="tabs">
+            <span id="inbox" class="tab">inbox</span>
+            <span id="sent" class="tab">sent</span>
+        </section>
+        <section id="inbox">
+            <table id="table" ><tbody id="emailBody"></tbody></table>
+        </section>
+    </div>
+    <script src="javascript/index.js" type="module"></script>
+</body>
+</html>
