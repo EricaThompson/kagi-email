@@ -169,7 +169,7 @@ textarea {
     width: 20%;
     margin-bottom: 0px;
     border: 1px solid #3E3E41;
-    border-bottom: none;
+    /* border-bottom: none; */
     border-radius: 9px 9px 0 0;
     padding-top: 8px;
     padding-bottom: 5px;
@@ -194,19 +194,36 @@ table {
 }
 
 tr {
-    border-bottom: 1px solid #d1d1d13b;
     width: 100%;
     margin: 5px;
     margin-bottom: 7px;
     padding: 10px;
     box-shadow: none;
+    border-bottom: 1px solid transparent;
 }
 
 tr:hover {
-    border-bottom: 1px solid #fcb419;
-
     cursor: pointer;
 }
+
+tr:nth-child(9n + 1):hover, tr:nth-child(9n + 1).expand-email { border-bottom: 1px solid #fcb419; }
+tr:nth-child(9n + 2):hover, tr:nth-child(9n + 2).expand-email { border-bottom: 1px solid #f78c1f; }
+tr:nth-child(9n + 3):hover, tr:nth-child(9n + 3).expand-email { border-bottom: 1px solid #f2545b; }
+tr:nth-child(9n + 4):hover, tr:nth-child(9n + 4).expand-email { border-bottom: 1px solid #e13f94; }
+tr:nth-child(9n + 5):hover, tr:nth-child(9n + 5).expand-email { border-bottom: 1px solid #9c27b0; }
+tr:nth-child(9n + 6):hover, tr:nth-child(9n + 6).expand-email { border-bottom: 1px solid #3f51b5; }
+tr:nth-child(9n + 7):hover, tr:nth-child(9n + 7).expand-email { border-bottom: 1px solid #2196f3; }
+tr:nth-child(9n + 8):hover, tr:nth-child(9n + 8).expand-email { border-bottom: 1px solid #00bcd4; }
+tr:nth-child(9n + 0):hover, tr:nth-child(9n + 0).expand-email { border-bottom: 1px solid #4caf50; }
+
+tr {
+    transition: border-bottom .5s ease-in-out;
+  }
+
+tr:hover, tr.expand-email {
+    transition: none;
+}
+  
 
 td {
     overflow: hidden;
@@ -223,11 +240,18 @@ td:nth-child(3) {
 
 
 
-.sender {
+.sender, .to {
     width: 20%;
-    /* margin-right: 20px; */
     font-weight: bold;
     flex-shrink: 0;
+}
+
+.to {
+    margin-right: 15px;
+}
+
+.to-label {
+    font-weight: lighter;
 }
 
 .subject {
@@ -257,7 +281,7 @@ td:nth-child(3) {
 }
 
 #line {
-    border-bottom: 1px solid;
+    /* border-bottom: 1px solid; */
     border: 1px solid;
 }
 
@@ -268,6 +292,8 @@ td:nth-child(3) {
 
 .expand-email {
     white-space: pre-line;
-    border-bottom: 1px solid #fcb419;
-
+    /* border-bottom: 1px solid ; */
 }
+
+
+
