@@ -157,12 +157,36 @@ textarea {
     font-size: .8rem;
 }
 
+.tabs {
+    margin-top: 20px;
+    display: flex;
+    width: 100%;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.tab {
+    width: 20%;
+    margin-bottom: 0px;
+    border: 1px solid #3E3E41;
+    border-bottom: none;
+    border-radius: 9px 9px 0 0;
+    padding-top: 8px;
+    padding-bottom: 5px;
+    /* padding-right: 20px; */
+    text-align: center;
+}
+
+.tab:hover {
+    background-color: #3E3E41;
+}
+
 table {
     border: 1px solid #d1d1d125;
     border-radius: 25px;
     width: 100%;
     padding: 20px 21px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     table-layout: fixed;
     width: 100%;
     background-color: #252529;
