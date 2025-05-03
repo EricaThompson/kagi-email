@@ -1,7 +1,7 @@
 const http = require('http');
 const port = 5197;
-const inbox = require('./data/dummyInbox');
-const sent = require('./data/dummySent');
+const inbox = require('../data/dummyInbox');
+const sent = require('../data/dummySent');
 
 const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
