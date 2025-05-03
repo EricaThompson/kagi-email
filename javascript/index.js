@@ -27,7 +27,7 @@ console.log("mailbox: ", inbox, sent)
 async function fetchEmails(){
   if (inbox){
     try {
-      const res = await fetch ('http://localhost:5197/inbox');
+      const res = await fetch ('/api/inbox');
       const data = await res.json();
       emailBody.innerHTML = ""
       data.map(({ body, date, id, sender, subject })=> {
@@ -49,7 +49,7 @@ async function fetchEmails(){
     }
   } else if (sent) {
     try {
-      const res = await fetch ('http://localhost:5197/sent');
+      const res = await fetch ('/api/sent');
       const data = await res.json();
       emailBody.innerHTML = ""
       data.map(({ body, date, id, sender, subject, to })=> {
@@ -80,7 +80,7 @@ async function sendEmail(e) {
   const body = e.target.querySelector('textarea').value || "that is the email body"
 
   try {
-    const res = await fetch('http://localhost:5197/submit', {
+    const res = await fetch('/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ to, subject, body })

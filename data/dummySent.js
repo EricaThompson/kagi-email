@@ -1,4 +1,4 @@
-const emails = [
+const sent = [
   {
     sender: "me",
     to: "celine",
@@ -104,4 +104,4 @@ Let’s try to finalize by Monday if possible.`,
   }
 ];
 
-module.exports = emails;
+export default sent;

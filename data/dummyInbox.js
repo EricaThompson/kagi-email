@@ -1,4 +1,4 @@
-const emails = [
+const inbox = [
   {
     sender: "celine",
     date: "2025-12-10",
@@ -125,4 +125,4 @@ const emails = [
   }
 ];
 
-module.exports = emails;
+export default inbox;
