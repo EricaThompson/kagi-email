@@ -238,7 +238,9 @@ td:nth-child(3) {
     text-align: left;
 }
 
-
+footer {
+    text-align: center;
+}
 
 .sender, .to {
     width: 20%;
@@ -294,6 +296,7 @@ td:nth-child(3) {
     white-space: pre-line;
     /* border-bottom: 1px solid ; */
 }
+
 
 
 
