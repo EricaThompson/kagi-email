@@ -1,6 +1,35 @@
-import { emails, months } from "../../backend/data/emails.js"
+// import { emails, months } from "../../backend/data/emails.js"
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-emails.map(([sender, date, subject, body])=> {
+let emails;
+(async function fetchEmails(){
+  try {
+    const res = await fetch ('http://localhost:5197/emails');
+    const data = await res.json();
+    emails = data
+    console.log('fetch: ', data)
+    
+    emails.map(({ body, date, id, sender, subject })=> {
+      const eachEmail = document.createElement("tr");
+      eachEmail.classList.add("each-email")
+      eachEmail.innerHTML = `<td class="sender">${sender} </td>
+                            <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+                            <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
+      eachEmail.classList.add("collapse")
+      eachEmail.addEventListener("click", () => {
+        eachEmail.classList.toggle("expand-email")
+      })
+    
+      emailBody.appendChild(eachEmail);
+    })
+
+  } catch (err) {
+    console.log('fetch err: ', err)
+  }
+})()
+
+console.log('closure: ',emails)
+emails && (emails.map(([body, date, id, sender, subject, ])=> {
 
   const eachEmail = document.createElement("tr");
   eachEmail.classList.add("each-email")
@@ -13,7 +42,7 @@ emails.map(([sender, date, subject, body])=> {
   })
 
   emailBody.appendChild(eachEmail);
-})
+}))
 
 const composeButton = document.getElementById("compose-btn")
 const composeEmail = document.getElementById("compose-email")

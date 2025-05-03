@@ -115,8 +115,5 @@ const emails = [
       id: 9
     }
   ];
-  
-
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 module.exports = emails;
