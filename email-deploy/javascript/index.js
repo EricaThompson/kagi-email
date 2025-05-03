@@ -50,8 +50,11 @@ async function fetchEmails(){
   } else if (sent) {
     try {
       const res = await fetch ('/api/sent');
-      const data = await res.json();
+      const seedData = await res.json();
+      const localEmail = JSON.parse(localStorage.getItem("localSave")) || [];
+      const data = [...localEmail, ...seedData];
       emailBody.innerHTML = ""
+
       data.map(({ body, date, id, sender, subject, to })=> {
 
         const eachEmail = document.createElement("tr");
@@ -79,24 +82,20 @@ async function sendEmail(e) {
   const subject = e.target.querySelector('input[type="text"]').value || "🐣 this is a subject"
   const body = e.target.querySelector('textarea').value || "that is the email body"
 
-  try {
-    const res = await fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ to, subject, body })
-    });
-
-    if (res.ok) {
-      await fetchEmails();
-    } else {
-      console.log('send fail');
-    }
-
-    composeEmail.classList.remove("show-compose-email");
-    e.target.reset(); 
-  } catch (err) {
-    console.log("Error sending email:", err);
+  const newEmail = {
+    to,
+    subject,
+    body,
+    date: new Date().toISOString().split('T')[0]
   }
+
+  const localSave = JSON.parse(localStorage.getItem("localSave")) || [];
+  localSave.unshift(newEmail);
+  localStorage.setItem("localSave", JSON.stringify(localSave))
+
+  await fetchEmails();
+
+  e.target.reset
 }
 
 const composeButton = document.getElementById("compose-btn")
