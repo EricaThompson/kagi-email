@@ -77,10 +77,11 @@ console.log("mailbox: ", inbox, sent)
 async function fetchEmails(){
   const folder = inbox ? "inbox" : "sent"
   const data = await getEmailsByFolder(folder);
+  const sortedEmails = data.sort((a,b) => new Date(b.date) - new Date(a.date) )
 
   emailBody.innerHTML = ""
 
-  data.map(({ body, date, index, from, subject, to })=> {
+  sortedEmails.map(({ body, date, index, from, subject, to })=> {
 
   const eachEmail = document.createElement("tr");
   eachEmail.classList.add("each-email")
@@ -88,10 +89,10 @@ async function fetchEmails(){
   eachEmail.innerHTML = folder === ("inbox" || "trash") ? 
     `<td class="sender">${from} </td>
     <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-    <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>` : 
+    <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td>` : 
     `<td class="to"><span class="to-label">To:</span> ${to} </td>
     <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-    <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
+    <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td>`
   
   eachEmail.classList.add("collapse")
   eachEmail.addEventListener("click", () => {
@@ -143,7 +144,7 @@ async function sendEmail(e) {
     await sendEmailToDB({to, subject, body, index, folder})
     await fetchEmails();
   } catch (err) {
-    console.log("Error sending email:", err);
+    console.log("Error sending email: ", err);
   }
 }
 

@@ -31,13 +31,12 @@ export async function getEmailsByFolder(folder) {
 }
 
 export async function sendEmailToDB({to, subject, body, index, folder}){
-    console.log("DB instance:", db);  // Should NOT be undefined
 
     const newEmail = {
         to,
         subject,
         body,
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toISOString(),
         from: "me@me.com",
         index,
         folder
