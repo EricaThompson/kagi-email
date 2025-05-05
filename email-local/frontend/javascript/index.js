@@ -38,25 +38,6 @@ trashTab.addEventListener("click", ()=>{
   fetchEmails();
 })
 
-async function deleteEmail(index, deleted){
-  if (!deleted){
-    sendEmailToTrash(index)
-  } else {
-    const confirmed = window.confirm("confirm delete?")
-
-    try {
-      if(confirmed){
-        await deleteEmailFromDB(index)
-      }
-
-    } catch (err){
-      console.log('error deleting email:', err)
-    }
-  }
-  
-  fetchEmails();
-}
-
 async function fetchEmails(){
   
   let folder
@@ -81,7 +62,7 @@ async function fetchEmails(){
       const eachEmail = document.createElement("tr");
       eachEmail.classList.add("each-email")
       
-      eachEmail.innerHTML = folder != "sent" ? 
+      eachEmail.innerHTML = folder === "inbox" || "trash" ? 
         `<td class="sender">${from} </td>
         <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
         <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td><span class="delete-icon">❌</span>` : 
@@ -140,6 +121,25 @@ async function sendEmail(e) {
   } catch (err) {
     console.log("Error sending email: ", err);
   }
+}
+
+async function deleteEmail(index, deleted){
+  if (!deleted){
+    sendEmailToTrash(index)
+  } else {
+    const confirmed = window.confirm("confirm delete?")
+
+    try {
+      if(confirmed){
+        await deleteEmailFromDB(index)
+      }
+
+    } catch (err){
+      console.log('error deleting email:', err)
+    }
+  }
+  
+  fetchEmails();
 }
 
 const composeButton = document.getElementById("compose-btn")
