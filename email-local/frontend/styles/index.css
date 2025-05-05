@@ -271,6 +271,20 @@ footer {
     flex-shrink: 0;
 }
 
+.delete-icon {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    /* margin-top: 8px; */
+    margin-left: 10px;
+}
+
+tr:hover .delete-icon {
+    opacity: 1;
+    visibility: visible;
+    /* border-bottom: none; */
+}
+
 
 #from {
     background-color: transparent;

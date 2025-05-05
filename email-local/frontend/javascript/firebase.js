@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-import { getFirestore, collection, getDocs, addDoc, query, where } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, query, where, doc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBj3640UPz59Cj8eP8yVq_U7oPQpvehR0g",
@@ -45,6 +45,15 @@ export async function sendEmailToDB({to, subject, body, index, folder}){
     await addDoc(collection(db, "emails"), newEmail);
     to === "me@me.com" ? await addDoc(collection(db, "emails"), {...newEmail, folder: "sent"}) : ""
 
+}
+
+export async function deleteEmailFromDB(index){
+    const docQuery = query(collection(db, "emails"), where("index", "==", index))
+    const querySnapshot = await getDocs(docQuery)
+    
+    for (const email of querySnapshot.docs){
+        await deleteDoc(doc(db, "emails", email.id));
+    }
 }
 
 export { db };

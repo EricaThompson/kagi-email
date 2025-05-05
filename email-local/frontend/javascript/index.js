@@ -1,4 +1,4 @@
-import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID } from './firebase.js';
+import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB } from './firebase.js';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 let sent = false
@@ -74,6 +74,15 @@ console.log("mailbox: ", inbox, sent)
 //   }
 // }
 
+async function deleteEmail(index){
+  try {
+    await deleteEmailFromDB(index)
+  } catch (err){
+    console.log('error sending email:', err)
+  }
+  fetchEmails();
+}
+
 async function fetchEmails(){
   const folder = inbox ? "inbox" : "sent"
   const data = await getEmailsByFolder(folder);
@@ -83,23 +92,29 @@ async function fetchEmails(){
 
   sortedEmails.map(({ body, date, index, from, subject, to })=> {
 
-  const eachEmail = document.createElement("tr");
-  eachEmail.classList.add("each-email")
-  
-  eachEmail.innerHTML = folder === ("inbox" || "trash") ? 
-    `<td class="sender">${from} </td>
-    <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-    <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td>` : 
-    `<td class="to"><span class="to-label">To:</span> ${to} </td>
-    <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-    <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td>`
-  
-  eachEmail.classList.add("collapse")
-  eachEmail.addEventListener("click", () => {
-    eachEmail.classList.toggle("expand-email")
-  })
+    const eachEmail = document.createElement("tr");
+    eachEmail.classList.add("each-email")
+    
+    eachEmail.innerHTML = folder === ("inbox" || "trash") ? 
+      `<td class="sender">${from} </td>
+      <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+      <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td><span class="delete-icon">❌</span>` : 
+      `<td class="to"><span class="to-label">To:</span> ${to} </td>
+      <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+      <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td> <span class="delete-icon">❌</span>`
+    
+    eachEmail.classList.add("collapse")
+    eachEmail.addEventListener("click", () => {
+      eachEmail.classList.toggle("expand-email")
+    })
 
-  emailBody.appendChild(eachEmail);
+    const deleteIcon = eachEmail.querySelector(".delete-icon")
+    deleteIcon.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      deleteEmail(index);
+    })
+
+    emailBody.appendChild(eachEmail);
 })}
 
 // async function sendEmail(e) {
