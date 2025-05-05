@@ -28,9 +28,7 @@ button {
 }
 
 .container {
-    width: 95vw;
-    padding: 10px;
-
+    width: 100%;
 }
 
 .inbox {
@@ -46,7 +44,7 @@ button {
 }
 
 .search {
-    width: 100%;
+    width: 99%;
     height: 45px;
     border-radius: 25px;
     text-align: right;
@@ -160,8 +158,8 @@ textarea {
 .tabs {
     margin-top: 20px;
     display: flex;
-    width: 100%;
-    margin-left: 20px;
+    width: 80%;
+    padding-left: 20px;
     cursor: pointer;
 }
 
@@ -183,7 +181,7 @@ textarea {
 table {
     border: 1px solid #d1d1d125;
     border-radius: 25px;
-    width: 100%;
+    width: 98%;
     padding: 20px 21px;
     /* margin-top: 20px; */
     table-layout: fixed;
@@ -264,6 +262,10 @@ footer {
     text-overflow: ellipsis;
     overflow: hidden;
     padding-right: 20px;
+}
+
+.subject-message:hover {
+    cursor: default;
 }
 
 .date {

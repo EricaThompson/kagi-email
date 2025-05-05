@@ -39,7 +39,6 @@ trashTab.addEventListener("click", ()=>{
 })
 
 async function fetchEmails(){
-  
   let folder
 
   if (inbox){
@@ -50,31 +49,37 @@ async function fetchEmails(){
     folder = "trash"
   }
 
-
   const data = await getEmailsByFolder(folder);
   const sortedEmails = data.sort((a,b) => new Date(b.date) - new Date(a.date) )
 
   emailBody.innerHTML = ""
 
   if (sortedEmails.length){
-    sortedEmails.map(({ body, date, index, from, subject, to, deleted })=> {
-
+    sortedEmails.map(({ body, date, index, from, subject, to, deleted, encrypted })=> {
+      const decryptedBody = ""
       const eachEmail = document.createElement("tr");
       eachEmail.classList.add("each-email")
-      
+
       eachEmail.innerHTML = folder === "inbox" || "trash" ? 
         `<td class="sender">${from} </td>
-        <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+          <td><div class="subject">${subject}</div>
+            <div id="message-expander" class="subject-message">
+              ${encrypted ? `<label> Encrypted Message 🔒 decrypt?</label><input class="decrypter" type="checkbox"><div id="decryption-form"></div>` : ""}
+            </div>
+            <span class="body-style"> - ${encrypted ? body : decryptedBody}<span>
+          </td>
         <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td><span class="delete-icon">❌</span>` : 
         `<td class="to"><span class="to-label">To:</span> ${to} </td>
         <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
         <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td> <span class="delete-icon">❌</span>`
       
       eachEmail.classList.add("collapse")
-      eachEmail.addEventListener("click", () => {
+      
+      const subjectExpand = eachEmail.querySelector(".subject")
+
+      subjectExpand.addEventListener("click", () => {
         eachEmail.classList.toggle("expand-email")
       })
-  
       const deleteIcon = eachEmail.querySelector(".delete-icon")
       deleteIcon.addEventListener("click", (e)=>{
         e.stopPropagation();
@@ -82,10 +87,37 @@ async function fetchEmails(){
       })
   
       emailBody.appendChild(eachEmail);
-    })} else {
-      emailBody.innerHTML = "Mailbox is Empty"
-    }
+
+      if (encrypted) {
+        const decryptCheckbox = eachEmail.querySelector(".decrypter");
+        const decryptionForm = eachEmail.querySelector("#decryption-form");
+      
+        if (decryptCheckbox && decryptionForm) {
+          decryptCheckbox.addEventListener("change", async (e) => {
+            if (e.target.checked) {
+              const message = await openpgp.readMessage({ armoredMessage: body });
+              const passphrase = prompt("Enter passphrase for this message:");
+              try {
+                const { data: decrypted } = await openpgp.decrypt({
+                  message,
+                  passwords: [passphrase],
+                  format: "utf8",
+                });
+                decryptionForm.textContent = decrypted;
+              } catch (err) {
+                decryptionForm.textContent = "Incorrect Passphrase.";
+                decryptCheckbox.checked = false
+                console.log("Decryption error:", err);
+              }
+            } else {
+              decryptionForm.textContent = "";
+            }
+          });
+        }
+      }
+    })
   }
+}
  
 async function sendEmail(e) {
   e.preventDefault();
@@ -95,20 +127,22 @@ async function sendEmail(e) {
   let body = e.target.querySelector('textarea').value || "that is the email body"
   const index = await getNewEmailID();
   const folder = to === "me@me.com" ? "inbox" : "sent"
+  let encrypted = false;
   
   const passphrase = document.getElementById("encryption-passphrase")?.value;
 
   if (passphrase) {
-    const encrypted = await openpgp.encrypt({
+    const encryptedBody = await openpgp.encrypt({
       message: await openpgp.createMessage({ text: body }),
       passwords: [passphrase],
       format: 'armored'
     });
-    body = encrypted;
+    body = encryptedBody;
+    encrypted = true;
   }
 
   try {
-    await sendEmailToDB({to, subject, body, index, folder})
+    await sendEmailToDB({to, subject, body, index, folder, encrypted})
     await fetchEmails();
     document.querySelectorAll('input, textarea').forEach(field => {
       field.value = ''

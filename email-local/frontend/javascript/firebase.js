@@ -27,7 +27,7 @@ export async function getEmailsByFolder(folder) {
     return snapshot.docs.map(doc => doc.data());
 }
 
-export async function sendEmailToDB({to, subject, body, index, folder}){
+export async function sendEmailToDB({to, subject, body, index, folder, encrypted}){
 
     const newEmail = {
         to,
@@ -37,7 +37,8 @@ export async function sendEmailToDB({to, subject, body, index, folder}){
         from: "me@me.com",
         index,
         folder,
-        deleted: false
+        deleted: false,
+        encrypted
     }
 
 
