@@ -1,4 +1,3 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 import { getFirestore, collection, getDocs, addDoc, deleteDoc, query, where, doc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
@@ -21,8 +20,6 @@ export async function getNewEmailID(){
     const emailCount = await getDocs(collection(db, 'emails'));
     return emailCount.size + 1
 }
-
-// console.log('emailCount: ', emailCount)
 
 export async function getEmailsByFolder(folder) {
     const folderQuery = query(collection(db, "emails"), where("folder", "==", folder))
