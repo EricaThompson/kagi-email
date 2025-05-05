@@ -1,45 +1,81 @@
-import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB } from './firebase.js';
+import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB, sendEmailToTrash } from './firebase.js';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 let sent = false
 let inbox = true
+let trash = false
 
 const inboxTab = document.getElementById("inbox")
 const sentTab = document.getElementById("sent")
+const trashTab = document.getElementById("trash")
 inboxTab.classList.add("selected")
 inboxTab.addEventListener("click", ()=>{
   inbox = true
   sent = false
+  trash = false
   inboxTab.classList.add("selected")
   sentTab.classList.remove("selected")
+  trashTab.classList.remove("selected")
   fetchEmails();
 })
 sentTab.addEventListener("click", ()=>{
   sent = true
   inbox = false
+  trash = false
   sentTab.classList.add("selected")
   inboxTab.classList.remove("selected")
+  trashTab.classList.remove("selected")
+  fetchEmails();
+})
+trashTab.addEventListener("click", ()=>{
+  sent = false
+  inbox = false
+  trash = true
+  sentTab.classList.remove("selected")
+  inboxTab.classList.remove("selected")
+  trashTab.classList.add("selected")
   fetchEmails();
 })
 
-async function deleteEmail(index){
-  try {
-    await deleteEmailFromDB(index)
-  } catch (err){
-    console.log('error sending email:', err)
+async function deleteEmail(index, deleted){
+  if (!deleted){
+    sendEmailToTrash(index)
+  } else {
+    const confirmed = window.confirm("confirm delete?")
+
+    try {
+      if(confirmed){
+        await deleteEmailFromDB(index)
+      }
+
+    } catch (err){
+      console.log('error deleting email:', err)
+    }
   }
+  
   fetchEmails();
 }
 
 async function fetchEmails(){
-  const folder = inbox ? "inbox" : "sent"
+  
+  let folder
+
+  if (inbox){
+    folder = "inbox"
+  } else if (sent){
+    folder = "sent"
+  } else {
+    folder = "trash"
+  }
+
+
   const data = await getEmailsByFolder(folder);
   const sortedEmails = data.sort((a,b) => new Date(b.date) - new Date(a.date) )
 
   emailBody.innerHTML = ""
 
   if (sortedEmails.length){
-    sortedEmails.map(({ body, date, index, from, subject, to })=> {
+    sortedEmails.map(({ body, date, index, from, subject, to, deleted })=> {
 
       const eachEmail = document.createElement("tr");
       eachEmail.classList.add("each-email")
@@ -60,7 +96,7 @@ async function fetchEmails(){
       const deleteIcon = eachEmail.querySelector(".delete-icon")
       deleteIcon.addEventListener("click", (e)=>{
         e.stopPropagation();
-        deleteEmail(index);
+        deleteEmail(index, deleted);
       })
   
       emailBody.appendChild(eachEmail);

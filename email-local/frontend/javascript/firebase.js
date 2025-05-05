@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, query, where, doc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, query, where, doc } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBj3640UPz59Cj8eP8yVq_U7oPQpvehR0g",
@@ -36,12 +36,25 @@ export async function sendEmailToDB({to, subject, body, index, folder}){
         date: new Date().toISOString(),
         from: "me@me.com",
         index,
-        folder
+        folder,
+        deleted: false
     }
+
 
     await addDoc(collection(db, "emails"), newEmail);
     to === "me@me.com" ? await addDoc(collection(db, "emails"), {...newEmail, folder: "sent"}) : ""
+}
 
+export async function sendEmailToTrash(index){
+    const docQuery = query(collection(db, "emails"), where("index", "==", index))
+    const querySnapshot = await getDocs(docQuery)
+
+    for (const email of querySnapshot.docs){
+        await updateDoc(doc(db, "emails", email.id), {
+            deleted: true,
+            folder: "trash"
+        })
+    }
 }
 
 export async function deleteEmailFromDB(index){
