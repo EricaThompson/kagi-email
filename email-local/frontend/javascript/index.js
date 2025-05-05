@@ -1,3 +1,5 @@
+import { getEmailsByFolder } from './firebase.js';
+
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 let sent = false
 let inbox = true
@@ -24,53 +26,74 @@ sentTab.addEventListener("click", ()=>{
 console.log("mailbox: ", inbox, sent)
 
 
+// async function fetchEmails(){
+//   if (inbox){
+//     try {
+//       const res = await fetch ('http://localhost:5197/inbox');
+//       const data = await res.json();
+//       emailBody.innerHTML = ""
+//       data.map(({ body, date, id, sender, subject })=> {
+
+//         const eachEmail = document.createElement("tr");
+//         eachEmail.classList.add("each-email")
+//         eachEmail.innerHTML = `<td class="sender">${sender} </td>
+//                               <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+//                               <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
+//         eachEmail.classList.add("collapse")
+//         eachEmail.addEventListener("click", () => {
+//           eachEmail.classList.toggle("expand-email")
+//         })
+      
+//         emailBody.appendChild(eachEmail);
+//       })
+//     } catch (err) {
+//       console.log('fetch err: ', err)
+//     }
+//   } else if (sent) {
+//     try {
+//       const res = await fetch ('http://localhost:5197/sent');
+//       const data = await res.json();
+//       emailBody.innerHTML = ""
+//       data.map(({ body, date, id, sender, subject, to })=> {
+
+//         const eachEmail = document.createElement("tr");
+//         eachEmail.classList.add("each-email")
+//         eachEmail.innerHTML = `<td class="to"><span class="to-label">To:</span> ${to} </td>
+//                               <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+//                               <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
+//         eachEmail.classList.add("collapse")
+//         eachEmail.addEventListener("click", () => {
+//           eachEmail.classList.toggle("expand-email")
+//         })
+      
+//         emailBody.appendChild(eachEmail);
+//       })
+//     } catch (err) {
+//       console.log('fetch err: ', err)
+//     }
+//   }
+// }
+
 async function fetchEmails(){
-  if (inbox){
-    try {
-      const res = await fetch ('http://localhost:5197/inbox');
-      const data = await res.json();
-      emailBody.innerHTML = ""
-      data.map(({ body, date, id, sender, subject })=> {
+  const folder = inbox ? "inbox" : "sent"
+  const data = await getEmailsByFolder(folder);
 
-        const eachEmail = document.createElement("tr");
-        eachEmail.classList.add("each-email")
-        eachEmail.innerHTML = `<td class="sender">${sender} </td>
-                              <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-                              <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
-        eachEmail.classList.add("collapse")
-        eachEmail.addEventListener("click", () => {
-          eachEmail.classList.toggle("expand-email")
-        })
-      
-        emailBody.appendChild(eachEmail);
-      })
-    } catch (err) {
-      console.log('fetch err: ', err)
-    }
-  } else if (sent) {
-    try {
-      const res = await fetch ('http://localhost:5197/sent');
-      const data = await res.json();
-      emailBody.innerHTML = ""
-      data.map(({ body, date, id, sender, subject, to })=> {
+  emailBody.innerHTML = ""
 
-        const eachEmail = document.createElement("tr");
-        eachEmail.classList.add("each-email")
-        eachEmail.innerHTML = `<td class="to"><span class="to-label">To:</span> ${to} </td>
-                              <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-                              <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
-        eachEmail.classList.add("collapse")
-        eachEmail.addEventListener("click", () => {
-          eachEmail.classList.toggle("expand-email")
-        })
-      
-        emailBody.appendChild(eachEmail);
-      })
-    } catch (err) {
-      console.log('fetch err: ', err)
-    }
-  }
-}
+  data.map(({ body, date, id, sender, subject })=> {
+
+  const eachEmail = document.createElement("tr");
+  eachEmail.classList.add("each-email")
+  eachEmail.innerHTML = `<td class="sender">${sender} </td>
+                        <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+                        <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
+  eachEmail.classList.add("collapse")
+  eachEmail.addEventListener("click", () => {
+    eachEmail.classList.toggle("expand-email")
+  })
+
+  emailBody.appendChild(eachEmail);
+})}
 
 async function sendEmail(e) {
   e.preventDefault();
