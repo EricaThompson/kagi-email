@@ -38,33 +38,37 @@ async function fetchEmails(){
 
   emailBody.innerHTML = ""
 
-  sortedEmails.map(({ body, date, index, from, subject, to })=> {
+  if (sortedEmails.length){
+    sortedEmails.map(({ body, date, index, from, subject, to })=> {
 
-    const eachEmail = document.createElement("tr");
-    eachEmail.classList.add("each-email")
-    
-    eachEmail.innerHTML = folder === ("inbox" || "trash") ? 
-      `<td class="sender">${from} </td>
-      <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-      <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td><span class="delete-icon">❌</span>` : 
-      `<td class="to"><span class="to-label">To:</span> ${to} </td>
-      <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-      <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td> <span class="delete-icon">❌</span>`
-    
-    eachEmail.classList.add("collapse")
-    eachEmail.addEventListener("click", () => {
-      eachEmail.classList.toggle("expand-email")
-    })
-
-    const deleteIcon = eachEmail.querySelector(".delete-icon")
-    deleteIcon.addEventListener("click", (e)=>{
-      e.stopPropagation();
-      deleteEmail(index);
-    })
-
-    emailBody.appendChild(eachEmail);
-})}
-
+      const eachEmail = document.createElement("tr");
+      eachEmail.classList.add("each-email")
+      
+      eachEmail.innerHTML = folder === ("inbox" || "trash") ? 
+        `<td class="sender">${from} </td>
+        <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+        <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td><span class="delete-icon">❌</span>` : 
+        `<td class="to"><span class="to-label">To:</span> ${to} </td>
+        <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+        <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td> <span class="delete-icon">❌</span>`
+      
+      eachEmail.classList.add("collapse")
+      eachEmail.addEventListener("click", () => {
+        eachEmail.classList.toggle("expand-email")
+      })
+  
+      const deleteIcon = eachEmail.querySelector(".delete-icon")
+      deleteIcon.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        deleteEmail(index);
+      })
+  
+      emailBody.appendChild(eachEmail);
+    })} else {
+      emailBody.innerHTML = "Mailbox is Empty"
+    }
+  }
+ 
 async function sendEmail(e) {
   e.preventDefault();
 
@@ -72,13 +76,14 @@ async function sendEmail(e) {
   const subject = e.target.querySelector('input[type="text"]').value || "🐣 this is a subject"
   const body = e.target.querySelector('textarea').value || "that is the email body"
   const index = await getNewEmailID();
-  console.log("index: ", index)
   const folder = to === "me@me.com" ? "inbox" : "sent"
 
-  
   try {
     await sendEmailToDB({to, subject, body, index, folder})
     await fetchEmails();
+    document.querySelectorAll('input, textarea').forEach(field => field.value = '');
+    composeEmail.classList.remove("show-compose-email")
+
   } catch (err) {
     console.log("Error sending email: ", err);
   }

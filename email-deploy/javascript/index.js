@@ -21,9 +21,6 @@ sentTab.addEventListener("click", ()=>{
   fetchEmails();
 })
 
-console.log("mailbox: ", inbox, sent)
-
-
 async function fetchEmails(){
   if (inbox){
     try {
