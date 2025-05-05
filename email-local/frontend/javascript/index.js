@@ -1,4 +1,5 @@
 import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB, sendEmailToTrash } from './firebase.js';
+import * as openpgp from 'https://cdn.jsdelivr.net/npm/openpgp@5.10.0/+esm';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 let sent = false
@@ -80,7 +81,7 @@ async function fetchEmails(){
       const eachEmail = document.createElement("tr");
       eachEmail.classList.add("each-email")
       
-      eachEmail.innerHTML = folder === ("inbox" || "trash") ? 
+      eachEmail.innerHTML = folder != "sent" ? 
         `<td class="sender">${from} </td>
         <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
         <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td><span class="delete-icon">❌</span>` : 
@@ -110,14 +111,30 @@ async function sendEmail(e) {
 
   const to = e.target.querySelector('input[type="email"]').value || "you@you.com"
   const subject = e.target.querySelector('input[type="text"]').value || "🐣 this is a subject"
-  const body = e.target.querySelector('textarea').value || "that is the email body"
+  let body = e.target.querySelector('textarea').value || "that is the email body"
   const index = await getNewEmailID();
   const folder = to === "me@me.com" ? "inbox" : "sent"
+  
+  const passphrase = document.getElementById("encryption-passphrase")?.value;
+
+  if (passphrase) {
+    const encrypted = await openpgp.encrypt({
+      message: await openpgp.createMessage({ text: body }),
+      passwords: [passphrase],
+      format: 'armored'
+    });
+    body = encrypted;
+  }
 
   try {
     await sendEmailToDB({to, subject, body, index, folder})
     await fetchEmails();
-    document.querySelectorAll('input, textarea').forEach(field => field.value = '');
+    document.querySelectorAll('input, textarea').forEach(field => {
+      field.value = ''
+      field.checked = false
+    });
+    encryptionForm.innerHTML = ""
+    
     composeEmail.classList.remove("show-compose-email")
 
   } catch (err) {
@@ -145,12 +162,27 @@ composeEmail.innerHTML = `
                 <div><input type="text" class="form-input" placeholder="subject:"></div>
                 <div class="body"><textarea type="text" placeholder="compose:"></textarea></div>
                 <button id="send-btn" class="send-btn">send</button>
+                <label> encrypt?</label><input class="encrypter" type="checkbox"><div id="encryption-form"></div>
             </section>
         </form>
     </section>`
 
+
 const closeBtn = document.getElementById("close-btn")
 const emailForm = document.getElementById("emailForm")
+const encryptCheckbox = document.querySelector(".encrypter")
+const encryptionForm = document.getElementById("encryption-form")
+
+encryptCheckbox.addEventListener("change", ()=>{
+  if (encryptCheckbox.checked ){
+    encryptionForm.innerHTML = `
+  <div id="symmetric-encryption">
+    <input id="encryption-passphrase" class="passphrase-input" type="text" placeholder="Enter passphrase" value="My-Passphrase!" />
+  </div>`
+  } else {
+    encryptionForm.innerHTML = ""
+  }
+})
 
 emailForm.addEventListener("submit", sendEmail)
 closeBtn.addEventListener("click", () => {
