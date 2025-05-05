@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-import { getFirestore, collection, getDocs, query, where } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+import { getFirestore, collection, getDocs, addDoc, query, where } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBj3640UPz59Cj8eP8yVq_U7oPQpvehR0g",
@@ -17,8 +17,35 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
+export async function getNewEmailID(){
+    const emailCount = await getDocs(collection(db, 'emails'));
+    return emailCount.size + 1
+}
+
+// console.log('emailCount: ', emailCount)
+
 export async function getEmailsByFolder(folder) {
     const folderQuery = query(collection(db, "emails"), where("folder", "==", folder))
     const snapshot = await getDocs(folderQuery);
     return snapshot.docs.map(doc => doc.data());
 }
+
+export async function sendEmailToDB({to, subject, body, index, folder}){
+    console.log("DB instance:", db);  // Should NOT be undefined
+
+    const newEmail = {
+        to,
+        subject,
+        body,
+        date: new Date().toISOString().split('T')[0],
+        from: "me@me.com",
+        index,
+        folder
+    }
+
+    await addDoc(collection(db, "emails"), newEmail);
+    to === "me@me.com" ? await addDoc(collection(db, "emails"), {...newEmail, folder: "sent"}) : ""
+
+}
+
+export { db };

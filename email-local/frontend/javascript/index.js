@@ -1,4 +1,4 @@
-import { getEmailsByFolder } from './firebase.js';
+import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID } from './firebase.js';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 let sent = false
@@ -80,13 +80,19 @@ async function fetchEmails(){
 
   emailBody.innerHTML = ""
 
-  data.map(({ body, date, id, sender, subject })=> {
+  data.map(({ body, date, index, from, subject, to })=> {
 
   const eachEmail = document.createElement("tr");
   eachEmail.classList.add("each-email")
-  eachEmail.innerHTML = `<td class="sender">${sender} </td>
-                        <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-                        <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
+  
+  eachEmail.innerHTML = folder === ("inbox" || "trash") ? 
+    `<td class="sender">${from} </td>
+    <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+    <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>` : 
+    `<td class="to"><span class="to-label">To:</span> ${to} </td>
+    <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
+    <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[2]} </td>`
+  
   eachEmail.classList.add("collapse")
   eachEmail.addEventListener("click", () => {
     eachEmail.classList.toggle("expand-email")
@@ -95,28 +101,47 @@ async function fetchEmails(){
   emailBody.appendChild(eachEmail);
 })}
 
+// async function sendEmail(e) {
+//   e.preventDefault();
+
+//   const to = e.target.querySelector('input[type="email"]').value || "you@you.com"
+//   const subject = e.target.querySelector('input[type="text"]').value || "🐣 this is a subject"
+//   const body = e.target.querySelector('textarea').value || "that is the email body"
+
+//   try {
+//     const res = await fetch('http://localhost:5197/submit', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ to, subject, body })
+//     });
+
+//     if (res.ok) {
+//       await fetchEmails();
+//     } else {
+//       console.log('send fail');
+//     }
+
+//     composeEmail.classList.remove("show-compose-email");
+//     e.target.reset(); 
+//   } catch (err) {
+//     console.log("Error sending email:", err);
+//   }
+// }
+
 async function sendEmail(e) {
   e.preventDefault();
 
   const to = e.target.querySelector('input[type="email"]').value || "you@you.com"
   const subject = e.target.querySelector('input[type="text"]').value || "🐣 this is a subject"
   const body = e.target.querySelector('textarea').value || "that is the email body"
+  const index = await getNewEmailID();
+  console.log("index: ", index)
+  const folder = to === "me@me.com" ? "inbox" : "sent"
 
+  
   try {
-    const res = await fetch('http://localhost:5197/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ to, subject, body })
-    });
-
-    if (res.ok) {
-      await fetchEmails();
-    } else {
-      console.log('send fail');
-    }
-
-    composeEmail.classList.remove("show-compose-email");
-    e.target.reset(); 
+    await sendEmailToDB({to, subject, body, index, folder})
+    await fetchEmails();
   } catch (err) {
     console.log("Error sending email:", err);
   }
