@@ -1,4 +1,4 @@
-import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB, sendEmailToTrash } from './firebase.js';
+import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB, sendEmailToTrash } from '../../javascript/firebase.js';
 import * as openpgp from 'https://cdn.jsdelivr.net/npm/openpgp@5.10.0/+esm';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
