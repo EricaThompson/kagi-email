@@ -5,22 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="../email/index.css" />
+    <link rel="stylesheet" href="./login.css" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>✉️</text></svg>">
 </head>
 <body>
     <section>
-        <div class="container">
-            <h1>Login</h1>
-            <form action="submit">
-                <input type="text" value="Demo">
-                <input type="email" value="me@me.com">
-                <input type="password" value="DemoUser">
-                <button type="submit">Login</button>
-            </form>
-            <p>No Account? Register</p>
-        </div>
-    </section>
+        <section class="container">
+            
+            <section class="login">
+                <h1>Kagi Email Login ✉️</h1>
+                <section class="login-types">
+                    <button class="send-btn">Demo User</button>
+                    <button id="email-btn" class="send-btn">Email</button>
+                    <button class="send-btn">Anonymous</button>
+                </section>
+                <section id="email-form" class="email-login">
+                    <input type="email" placeholder="email = me@me.com" value="me@me.com">
+                    <input type="password" placeholder="password = DemoUser" value="DemoUser">
+                    <button id="login-btn" class="send-btn">Login</button>
+                </section>
+            </section>
+            <a href="" class="link">No Account? Register</a>
+        </section>
     <footer class="footer"><p>erica thompson | <a href="http://ericathompson.github.io" target="_blank">portfolio</a> | <a href="https://www.github.com/ericathompson" target="_blank">github</a></p></footer>
-    <script type="module" src="../javascript/login.js"></script>
+    <script type="module" src="./login.js"></script>
 </body>
 </html>
