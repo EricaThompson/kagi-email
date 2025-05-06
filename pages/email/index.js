@@ -1,6 +1,6 @@
 import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB, sendEmailToTrash } from '../../javascript/firebase.js';
 import * as openpgp from 'https://cdn.jsdelivr.net/npm/openpgp@5.10.0/+esm';
-import { getAuth } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 
 const auth = getAuth();
 
@@ -247,6 +247,7 @@ const closeBtn = document.getElementById("close-btn")
 const emailForm = document.getElementById("emailForm")
 const encryptCheckbox = document.querySelector(".encrypter")
 const encryptionForm = document.getElementById("encryption-form")
+const logoutBtn = document.querySelector(".logout-btn")
 
 encryptCheckbox.addEventListener("change", ()=>{
   if (encryptCheckbox.checked ){
@@ -262,6 +263,18 @@ encryptCheckbox.addEventListener("change", ()=>{
 emailForm.addEventListener("submit", sendEmail)
 closeBtn.addEventListener("click", () => {
   composeEmail.classList.toggle("show-compose-email")
+})
+
+logoutBtn.addEventListener("click", ()=>{
+  const confirmation = confirm("log out?")
+
+  if (confirmation){
+    signOut(auth).then(()=> {
+      window.location.href = "/pages/login/login.html"
+    }).catch((err) => {
+      console.log("Logout Error: ", err)
+    })
+  }
 })
 
 fetchEmails()
