@@ -53,70 +53,89 @@ async function fetchEmails(){
   const sortedEmails = data.sort((a,b) => new Date(b.date) - new Date(a.date) )
 
   emailBody.innerHTML = ""
-
-  if (sortedEmails.length){
-    sortedEmails.map(({ body, date, index, from, subject, to, deleted, encrypted })=> {
-      const decryptedBody = ""
-      const eachEmail = document.createElement("tr");
-      eachEmail.classList.add("each-email")
-
-      eachEmail.innerHTML = folder === "inbox" || "trash" ? 
-        `<td class="sender">${from} </td>
-          <td><div class="subject">${subject}</div>
-            <div id="message-expander" class="subject-message">
-              ${encrypted ? `<label> Encrypted Message 🔒 decrypt?</label><input class="decrypter" type="checkbox"><div id="decryption-form"></div>` : ""}
-            </div>
-            <span class="body-style"> - ${encrypted ? body : decryptedBody}<span>
-          </td>
-        <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td><span class="delete-icon">❌</span>` : 
-        `<td class="to"><span class="to-label">To:</span> ${to} </td>
-        <td><div class="subject-message"><span>${subject}<span><span class="body-style"> - ${body}<span></div></td>
-        <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td> <span class="delete-icon">❌</span>`
-      
-      eachEmail.classList.add("collapse")
-      
-      const subjectExpand = eachEmail.querySelector(".subject")
-
-      subjectExpand.addEventListener("click", () => {
-        eachEmail.classList.toggle("expand-email")
-      })
-      const deleteIcon = eachEmail.querySelector(".delete-icon")
-      deleteIcon.addEventListener("click", (e)=>{
-        e.stopPropagation();
-        deleteEmail(index, deleted);
-      })
   
-      emailBody.appendChild(eachEmail);
+  if (!sortedEmails.length){
+    if(folder === "inbox"){
+      return emailBody.innerHTML = "Folder is empty, send an email to me@me.com to populate."
+    } else if (folder === "sent") {
+      return emailBody.innerHTML = "Folder is empty, send an email to any address to populate."
+    } else {
+      return emailBody.innerHTML = "Folder is empty, delete an email to populate."
+    }
+  }
 
-      if (encrypted) {
-        const decryptCheckbox = eachEmail.querySelector(".decrypter");
-        const decryptionForm = eachEmail.querySelector("#decryption-form");
-      
-        if (decryptCheckbox && decryptionForm) {
-          decryptCheckbox.addEventListener("change", async (e) => {
-            if (e.target.checked) {
-              const message = await openpgp.readMessage({ armoredMessage: body });
-              const passphrase = prompt("Enter passphrase for this message:");
+  sortedEmails.map(({ body, date, index, from, subject, to, deleted, encrypted })=> {
+    const eachEmail = document.createElement("tr");
+    eachEmail.classList.add("each-email")
+
+    eachEmail.innerHTML =  
+      `<td class="sender">${folder === "sent" ? `<span class="to-label">To:</span> ${to}` : to }</td>
+        <td><div class="subject">${subject}</div>
+          <div class="subject-message">
+            ${encrypted ? `<label>🔒 Encrypted Message Decrypt?</label><input class="decrypter" type="checkbox"><div id="decryption-form"></div>` : ""}
+            <span class="body-style">${!encrypted ? body : "" }<span>
+          </div>
+        </td>
+      <td class="date">${months[date.split("-")[1]-1]} ${date.split("-")[1]} </td><span class="delete-icon">❌</span>`
+    
+    eachEmail.classList.add("collapse")
+    
+    const subjectExpand = eachEmail.querySelector(".subject")
+
+    subjectExpand.addEventListener("click", () => {
+      eachEmail.classList.toggle("expand-email")
+    })
+    const deleteIcon = eachEmail.querySelector(".delete-icon")
+    deleteIcon.addEventListener("click", (e)=>{
+      e.stopPropagation();
+      deleteEmail(index, deleted);
+    })
+
+    emailBody.appendChild(eachEmail);
+
+    if (encrypted) {
+      const decryptCheckbox = eachEmail.querySelector(".decrypter");
+      const decryptionForm = eachEmail.querySelector("#decryption-form");
+    
+      if (decryptCheckbox && decryptionForm) {
+        decryptCheckbox.addEventListener("change", (e) => {
+          if (e.target.checked) {
+            decryptionForm.innerHTML = `
+              <div">
+                <input type="text" placeholder="Enter passphrase" class="passphrase-input" value="My-Passphrase!" />
+                <button class="send-btn decrypt-btn">Decrypt</button>
+                <div class="decrypted-result"></div>
+              </div>
+            `;
+        
+            const decryptBtn = decryptionForm.querySelector(".decrypt-btn");
+            const passphraseInput = decryptionForm.querySelector(".passphrase-input");
+            const resultDiv = decryptionForm.querySelector(".decrypted-result");
+        
+            decryptBtn.addEventListener("click", async () => {
+              const passphrase = passphraseInput.value.trim();
               try {
+                const message = await openpgp.readMessage({ armoredMessage: body });
                 const { data: decrypted } = await openpgp.decrypt({
                   message,
                   passwords: [passphrase],
                   format: "utf8",
                 });
-                decryptionForm.textContent = decrypted;
+                resultDiv.innerHTML = decrypted;
               } catch (err) {
-                decryptionForm.textContent = "Incorrect Passphrase.";
-                decryptCheckbox.checked = false
-                console.log("Decryption error:", err);
+                resultDiv.innerHTML = "Incorrect Passphrase.";
+                console.error("Decryption error:", err);
               }
-            } else {
-              decryptionForm.textContent = "";
-            }
-          });
-        }
+            });
+        
+          } else {
+            decryptionForm.innerHTML = "";
+          }
+        });
+        
       }
-    })
-  }
+    }
+  })
 }
  
 async function sendEmail(e) {
@@ -192,11 +211,26 @@ composeEmail.innerHTML = `
                   <div><h1>New Email</h1></div> 
                   <div id="close-btn"><button type="button">✖️</button></div>
                 </div>
-                <div><input type="email" class="form-input" placeholder="to:"></div>
-                <div><input type="text" class="form-input" placeholder="subject:"></div>
-                <div class="body"><textarea type="text" placeholder="compose:"></textarea></div>
-                <button id="send-btn" class="send-btn">send</button>
-                <label> encrypt?</label><input class="encrypter" type="checkbox"><div id="encryption-form"></div>
+                <div><input type="email" class="form-input" placeholder="to:" value="me@me.com"></div>
+                <div><input type="text" class="form-input" placeholder="subject:" value="Note to Self"></div>
+                <div class="body">
+<textarea type="text" placeholder=" compose: Click "send" to send a demo email.">
+
+Hi,
+
+Welcome to my email client. ✉️
+
+If you send this email, it will send to yourself. 📥
+
+You can encrypt the message below with the provided passphrase or create your own. 🔐
+
+If you delete messages, they will go to the trash folder where you can permanently delete them from the server. 🗑️
+
+
+Enjoy!</textarea></div>
+                  <div id="encryption-form"></div>
+                  <button id="send-btn" class="send-btn">Send</button>
+                  <label> Encrypt?</label><input class="encrypter" type="checkbox">
             </section>
         </form>
     </section>`
