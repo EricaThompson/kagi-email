@@ -50,3 +50,12 @@ button {
 .show-email-form {
     display: block;
 }
+
+.login-error {
+    display: none;
+    color: red;
+}
+
+.show {
+    display:block;
+}
