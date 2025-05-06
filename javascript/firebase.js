@@ -21,28 +21,32 @@ export async function getNewEmailID(){
     return emailCount.size + 1
 }
 
-export async function getEmailsByFolder(folder) {
-    const folderQuery = query(collection(db, "emails"), where("folder", "==", folder))
+export async function getEmailsByFolder(folder, user) {
+    console.log(folder, user.email)
+    let folderQuery = query(collection(db, "emails"),
+        where("folder", "==", folder),
+        where("owner", "==", user.email)
+        )
     const snapshot = await getDocs(folderQuery);
     return snapshot.docs.map(doc => doc.data());
 }
 
-export async function sendEmailToDB({to, subject, body, index, folder, encrypted, currentEmail}){
-
+export async function sendEmailToDB({to, subject, body, index, folder, encrypted, user}){
     const newEmail = {
         to,
         subject,
         body,
         date: new Date().toISOString(),
-        from: currentEmail,
+        from: user.email,
         index,
         folder,
         deleted: false,
-        encrypted
+        encrypted,
+        owner: user.email
     }
 
     await addDoc(collection(db, "emails"), newEmail);
-    to === currentEmail ? await addDoc(collection(db, "emails"), {...newEmail, folder: "sent"}) : ""
+    to === user.email ? await addDoc(collection(db, "emails"), {...newEmail, folder: "sent"}) : ""
 }
 
 export async function sendEmailToTrash(index){

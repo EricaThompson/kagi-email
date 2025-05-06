@@ -14,7 +14,6 @@ h1 {
 }
 
 a {
-    text-decoration: none;
     cursor: pointer;
 }
 
@@ -320,5 +319,5 @@ tr:hover .delete-icon {
 }
 
 .footer a, p {
-    color: #414141;
+    color: #8e8e8e;
 }
