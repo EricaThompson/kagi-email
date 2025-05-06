@@ -17,34 +17,43 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+const demoLoginBtn = document.getElementById("demo-login-btn")
 const emailBtn = document.getElementById("email-btn")
 const emailForm = document.getElementById("email-form")
+const registerBtn = document.getElementById("register-btn")
 const loginBtn = document.getElementById("login-btn")
 const loginError = document.querySelector(".login-error")
 const email = document.querySelector('.login-email')
 const password = document.querySelector('.login-password')
 
 const handleRegistration=()=> {
-    const email = document.querySelector('input[type="email"]').value
-    const password = document.querySelector('input[type="password"]').value
+    const email = document.querySelector('.register-email').value
+    const password = document.querySelector('.register-password').value
 
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed up 
       const user = userCredential.user;
+      window.location.href = "/pages/email/index.html"
       // go to inbox
 
     })
     .catch((err) => {
       const errCode = err.code;
       const errMessage = err.message;
+      console.log("failed reg", errCode, errMessage)
       // ..
     });
 }
 
-const handleLogin=()=> {
-    const email = document.querySelector('.login-email').value
-    const password = document.querySelector('.login-password').value
+const handleLogin=(type)=> {
+  let email = document.querySelector('.login-email').value
+  let password = document.querySelector('.login-password').value
+  
+  if (type === "demo"){
+    email = "my.dev.demo.user@gmail.com" 
+    password = "demouser"
+  } 
     
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
@@ -59,6 +68,10 @@ const handleLogin=()=> {
 
 }
 
+demoLoginBtn.addEventListener("click",()=> {
+  handleLogin("demo")
+})
+
 emailBtn.addEventListener("click", () => {
     emailForm.classList.toggle("show-email-form")
 })
@@ -67,10 +80,14 @@ loginBtn.addEventListener("click", () => {
   handleLogin()
 })
 
-email.addEventListener("input", (e)=> {
+registerBtn.addEventListener("click", ()=> {
+  handleRegistration()
+})
+
+email.addEventListener("input", ()=> {
   loginError.classList.remove("show")
 })
 
-password.addEventListener("input", (e)=> {
+password.addEventListener("input", ()=> {
   loginError.classList.remove("show")
 })

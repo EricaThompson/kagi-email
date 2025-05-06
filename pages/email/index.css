@@ -218,6 +218,10 @@ footer {
     text-align: center;
 }
 
+/* label {
+    text-overflow: ellipsis;
+} */
+
 .decryption-form {
     margin-top: 0px;
 }
@@ -231,8 +235,13 @@ footer {
     width: 100px;
 }
 
+.decrypted-result {
+    width: 80%;
+    text-overflow: ellipsis;
+}
+
 .sender, .to {
-    width: 27%;
+    width: 15%;
     font-weight: bold;
     flex-shrink: 0;
     padding-left: 20px;
@@ -253,6 +262,7 @@ footer {
 }
 
 .subject-message {
+    display: flex;
     font-weight: lighter;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -261,6 +271,10 @@ footer {
 
 .subject-message:hover {
     cursor: default;
+}
+
+.expand {
+    font-size: .65rem;
 }
 
 .date {

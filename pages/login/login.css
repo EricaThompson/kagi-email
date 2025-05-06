@@ -59,3 +59,8 @@ button {
 .show {
     display:block;
 }
+
+.link {
+    margin-top: 15px;
+    font-size: .8rem;
+}

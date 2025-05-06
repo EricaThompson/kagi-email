@@ -1,12 +1,22 @@
 import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB, sendEmailToTrash } from '../../javascript/firebase.js';
 import * as openpgp from 'https://cdn.jsdelivr.net/npm/openpgp@5.10.0/+esm';
-import { getAuth, signOut } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 
 const auth = getAuth();
+let currentUser
+let currentEmail 
 
-if (!auth){
-  window.location.href = "/pages/login/login.html"
-}
+
+onAuthStateChanged(auth, user => {
+  if (user) {
+    currentUser = user;
+    currentEmail = user.email;
+    console.log("Logged in as:", currentEmail);
+
+  } else {
+    window.location.href = "/pages/login/login.html";
+  }
+})
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 let sent = false
@@ -46,6 +56,9 @@ trashTab.addEventListener("click", ()=>{
 })
 
 async function fetchEmails(){
+  
+  emailBody.innerHTML = 'loading...'
+  
   let folder
 
   if (inbox){
@@ -63,15 +76,16 @@ async function fetchEmails(){
   
   if (!sortedEmails.length){
     if(folder === "inbox"){
-      return emailBody.innerHTML = "Folder is empty, send an email to me@me.com to populate."
+      return emailBody.innerHTML = "Folder is empty, send an email to yourself (or my.dev.demo.user@gmail.com for the Demo User account) to populate."
     } else if (folder === "sent") {
       return emailBody.innerHTML = "Folder is empty, send an email to any address to populate."
     } else {
       return emailBody.innerHTML = "Folder is empty, delete an email to populate."
     }
-  }
+  } 
 
-  sortedEmails.map(({ body, date, index, from, subject, to, deleted, encrypted })=> {
+  sortedEmails.map(({ body, date, index, subject, to, deleted, encrypted, from })=> {
+
     const eachEmail = document.createElement("tr");
     eachEmail.classList.add("each-email")
 
@@ -139,7 +153,6 @@ async function fetchEmails(){
             decryptionForm.innerHTML = "";
           }
         });
-        
       }
     }
   })
@@ -147,12 +160,11 @@ async function fetchEmails(){
  
 async function sendEmail(e) {
   e.preventDefault();
-
   const to = e.target.querySelector('input[type="email"]').value || "you@you.com"
   const subject = e.target.querySelector('input[type="text"]').value || "🐣 this is a subject"
   let body = e.target.querySelector('textarea').value || "that is the email body"
   const index = await getNewEmailID();
-  const folder = to === "me@me.com" ? "inbox" : "sent"
+  const folder = to === currentEmail ? "inbox" : "sent"
   let encrypted = false;
   
   const passphrase = document.getElementById("encryption-passphrase")?.value;
@@ -168,7 +180,7 @@ async function sendEmail(e) {
   }
 
   try {
-    await sendEmailToDB({to, subject, body, index, folder, encrypted})
+    await sendEmailToDB({to, subject, body, index, folder, encrypted, currentEmail})
     await fetchEmails();
     document.querySelectorAll('input, textarea').forEach(field => {
       field.value = ''
@@ -218,7 +230,7 @@ composeEmail.innerHTML = `
                   <div><h1>New Email</h1></div> 
                   <div id="close-btn"><button type="button">✖️</button></div>
                 </div>
-                <div><input type="email" class="form-input" placeholder="to:" value="me@me.com"></div>
+                <div><input type="email" class="form-input" placeholder="to:" value="my.dev.demo.user@gmail.com"></div>
                 <div><input type="text" class="form-input" placeholder="subject:" value="Note to Self"></div>
                 <div class="body">
 <textarea type="text" placeholder=" compose: Click "send" to send a demo email.">
@@ -245,6 +257,7 @@ Enjoy!</textarea></div>
 
 const closeBtn = document.getElementById("close-btn")
 const emailForm = document.getElementById("emailForm")
+const emailInput = document.querySelector(".form-input")
 const encryptCheckbox = document.querySelector(".encrypter")
 const encryptionForm = document.getElementById("encryption-form")
 const logoutBtn = document.querySelector(".logout-btn")

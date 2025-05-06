@@ -27,23 +27,22 @@ export async function getEmailsByFolder(folder) {
     return snapshot.docs.map(doc => doc.data());
 }
 
-export async function sendEmailToDB({to, subject, body, index, folder, encrypted}){
+export async function sendEmailToDB({to, subject, body, index, folder, encrypted, currentEmail}){
 
     const newEmail = {
         to,
         subject,
         body,
         date: new Date().toISOString(),
-        from: "me@me.com",
+        from: currentEmail,
         index,
         folder,
         deleted: false,
         encrypted
     }
 
-
     await addDoc(collection(db, "emails"), newEmail);
-    to === "me@me.com" ? await addDoc(collection(db, "emails"), {...newEmail, folder: "sent"}) : ""
+    to === currentEmail ? await addDoc(collection(db, "emails"), {...newEmail, folder: "sent"}) : ""
 }
 
 export async function sendEmailToTrash(index){
