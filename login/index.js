@@ -37,7 +37,7 @@ const handleRegistration=()=> {
 
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      window.location.href = "/pages/email/email.html"
+      window.location.href = "/email/email.html"
     })
     .catch((err) => {
       registerError.innerHTML = err.message.replace(/^Firebase:\s*/, "")
@@ -55,7 +55,7 @@ const handleLogin=(type)=> {
     
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      window.location.href = "/pages/email/email.html"
+      window.location.href = "/email/email.html"
     })
     .catch((err) => {
       loginError.innerHTML = err.message.replace(/^Firebase:\s*/, "")

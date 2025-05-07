@@ -1,4 +1,4 @@
-import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB, sendEmailToTrash } from '../../backend/firebase.js';
+import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB, sendEmailToTrash } from '../backend/firebase.js';
 import * as openpgp from 'https://cdn.jsdelivr.net/npm/openpgp@5.10.0/+esm';
 import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 
@@ -14,7 +14,7 @@ function waitForAuth() {
         currentEmail = user.email;
         resolve(user);
       } else {
-        window.location.href = "/pages/login/index.html";
+        window.location.href = "/login/index.html";
       }
     });
   });
@@ -298,7 +298,7 @@ logoutBtn.addEventListener("click", ()=>{
 
   if (confirmation){
     signOut(auth).then(()=> {
-      window.location.href = "/pages/login/index.html"
+      window.location.href = "/login/index.html"
     }).catch((err) => {
       console.log("Logout Error: ", err)
     })
