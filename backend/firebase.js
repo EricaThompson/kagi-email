@@ -4,7 +4,24 @@ import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, query,
 // import localFirebaseConfig from './localFirebaseConfig.js'
 import firebaseConfig from './firebaseConfig.js';
 
-const app = initializeApp(firebaseConfig);
+let config
+if (VERCEL){
+  config = {
+    FIREBASE_API_KEY,
+    FIREBASE_AUTH_DOMAIN,
+    FIREBASE_PROJECT_ID,
+    FIREBASE_STORAGE_BUCKET,
+    FIREBASE_MESSAGING_SENDER_ID,
+    FIREBASE_APP_ID,
+    FIREBASE_MEASUREMENT_ID
+  }
+} else {
+  config = firebaseConfig;
+}
+
+
+const app = initializeApp(config);
+
 const analytics = getAnalytics(app);
 const db = getFirestore(app);
 

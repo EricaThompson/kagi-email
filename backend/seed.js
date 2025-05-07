@@ -4,7 +4,23 @@ import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11
 // import localFirebaseConfig from './localFirebaseConfig.js'
 import firebaseConfig from './firebaseConfig.js';
 
-const app = initializeApp(firebaseConfig);
+let config
+if (VERCEL){
+  config = {
+    FIREBASE_API_KEY,
+    FIREBASE_AUTH_DOMAIN,
+    FIREBASE_PROJECT_ID,
+    FIREBASE_STORAGE_BUCKET,
+    FIREBASE_MESSAGING_SENDER_ID,
+    FIREBASE_APP_ID,
+    FIREBASE_MEASUREMENT_ID
+  }
+} else {
+  config = firebaseConfig;
+}
+
+const app = initializeApp(config);
+
 const db = getFirestore(app);
 
 const seedData = [
