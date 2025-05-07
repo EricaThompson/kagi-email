@@ -64,7 +64,7 @@ export async function sendEmailToDB({to, subject, body, index, encrypted, user})
 
     await addDoc(collection(db, "emails"), newEmail);
     if (to === user.email){
-        await addDoc(collection(db, "emails"), {...newEmail, folder: "sent", index: newIndex += 1})
+        await addDoc(collection(db, "emails"), {...newEmail, folder: "inbox", index: newIndex += 1})
     } else {
         await addDoc(collection(db, "emails"), {...newEmail, folder: "inbox", owner: to, newIndex: index += 1});
     }

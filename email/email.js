@@ -83,6 +83,8 @@ async function fetchEmails(){
     return email.from === user.email || email.to === user.email
   })
 
+  console.log(filteredEmails)
+
   emailBody.innerHTML = ""
   
   if (!filteredEmails.length){
@@ -246,7 +248,7 @@ composeEmail.innerHTML = `
                   <div id="close-btn"><button type="button">✖️</button></div>
                 </div>
                 <div><input type="email" class="form-input" placeholder="to:" value="demo@kagi.com"></div>
-                <div><input type="text" class="form-input" placeholder="subject:" value="Note to Self"></div>
+                <div><input type="text" class="form-input" placeholder="subject:" value="📝 Note to Self"></div>
                 <div class="body">
 <textarea type="text" placeholder=" compose: Click "send" to send a demo email.">
 
