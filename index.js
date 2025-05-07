@@ -9,7 +9,8 @@ import firebaseConfig from './backend/firebaseConfig.js';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
-const demoLoginBtn = document.getElementById("demo-login-btn")
+const demoLoginBtnOne = document.getElementById("demo-login-btn-one")
+const demoLoginBtnTwo = document.getElementById("demo-login-btn-two")
 const emailBtn = document.getElementById("email-btn")
 const emailForm = document.getElementById("email-form")
 const registerLink = document.querySelector(".register-link")
@@ -40,10 +41,13 @@ const handleLogin=(type)=> {
   let email = document.querySelector('.login-email').value
   let password = document.querySelector('.login-password').value
   
-  if (type === "demo"){
+  if (type === "demo-one"){
     email = "demo@kagi.com" 
     password = "Kagi-Email"
-  } 
+  } else if (type === "demo-two"){
+    email = "test@test.com"
+    password = "tester"
+  }
     
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
@@ -55,8 +59,12 @@ const handleLogin=(type)=> {
 
 }
 
-demoLoginBtn.addEventListener("click",()=> {
-  handleLogin("demo")
+demoLoginBtnOne.addEventListener("click",()=> {
+  handleLogin("demo-one")
+})
+
+demoLoginBtnTwo.addEventListener("click",()=> {
+  handleLogin("demo-two")
 })
 
 emailBtn.addEventListener("click", () => {
