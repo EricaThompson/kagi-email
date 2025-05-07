@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword  
 } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+// import localFirebaseConfig from './backend/localFirebaseConfig.js'
 import firebaseConfig from './backend/firebaseConfig.js';
 
 const app = initializeApp(firebaseConfig);

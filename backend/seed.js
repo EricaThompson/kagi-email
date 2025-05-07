@@ -1,6 +1,7 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+// import localFirebaseConfig from './localFirebaseConfig.js'
 import firebaseConfig from './firebaseConfig.js';
 
 const app = initializeApp(firebaseConfig);

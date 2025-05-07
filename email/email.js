@@ -83,8 +83,6 @@ async function fetchEmails(){
     return email.from === user.email || email.to === user.email
   })
 
-  console.log(filteredEmails)
-
   emailBody.innerHTML = ""
   
   if (!filteredEmails.length){
