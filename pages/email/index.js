@@ -1,4 +1,4 @@
-import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB, sendEmailToTrash } from '../../javascript/firebase.js';
+import { db, getEmailsByFolder, sendEmailToDB, getNewEmailID, deleteEmailFromDB, sendEmailToTrash } from '../../backend/firebase.js';
 import * as openpgp from 'https://cdn.jsdelivr.net/npm/openpgp@5.10.0/+esm';
 import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 
@@ -12,7 +12,6 @@ function waitForAuth() {
       if (user) {
         currentUser = user;
         currentEmail = user.email;
-        console.log("Auth ready:", currentEmail);
         resolve(user);
       } else {
         window.location.href = "/pages/login/login.html";
@@ -220,7 +219,6 @@ async function deleteEmail(index, deleted, userEmail){
       if(confirmed){
         await deleteEmailFromDB(index)
       }
-
     } catch (err){
       console.log('error deleting email:', err)
     }

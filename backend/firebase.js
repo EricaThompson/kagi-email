@@ -22,7 +22,6 @@ export async function getNewEmailID(){
 }
 
 export async function getEmailsByFolder(folder, user) {
-    console.log(folder, user.email)
     let folderQuery
     if (folder === "inbox"){
         folderQuery = query(collection(db, "emails"),

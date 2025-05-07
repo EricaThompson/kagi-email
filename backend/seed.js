@@ -338,7 +338,7 @@ async function seedFirestore() {
         for (const email of seedData) {
             const emailRef = doc(db, "emails", email.index.toString());
             await setDoc(emailRef, email);     }
-        console.log("Firestore seeding complete.");
+            console.log("Firestore seeding complete.");
         } catch (err) {
             console.log("Error seeding Firestore:", err);
         }
