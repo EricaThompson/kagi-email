@@ -60,7 +60,7 @@ Kagi Email is a vanilla full stack, terminal-inspired web application for email.
 2. Update Firebase configuration in `localFirebaseConfig.js`:
 
    ```javascript
-   const firebaseConfig = {
+   const localFirebaseConfig = {
      apiKey: "YOUR_API_KEY",
      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
      projectId: "YOUR_PROJECT_ID",
