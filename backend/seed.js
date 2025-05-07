@@ -1,20 +1,10 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyBj3640UPz59Cj8eP8yVq_U7oPQpvehR0g",
-    authDomain: "kagi-email-app.firebaseapp.com",
-    projectId: "kagi-email-app",
-    storageBucket: "kagi-email-app.firebasestorage.app",
-    messagingSenderId: "964381072526",
-    appId: "1:964381072526:web:d8d4eb9d30e728b482bddf",
-    measurementId: "G-HCT6J0BEQY"
-};
+import firebaseConfig from './firebaseConfig.js';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 
 const seedData = [
     {
