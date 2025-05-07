@@ -1,0 +1,20 @@
+{
+  "name": "kagi-email",
+  "version": "1.0.0",
+  "description": "## Project Overview",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EricaThompson/kagi-email.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EricaThompson/kagi-email/issues"
+  },
+  "homepage": "https://github.com/EricaThompson/kagi-email#readme"
+}
