@@ -14,7 +14,7 @@ function waitForAuth() {
         currentEmail = user.email;
         resolve(user);
       } else {
-        window.location.href = "/pages/login/login.html";
+        window.location.href = "/pages/login/index.html";
       }
     });
   });
@@ -298,7 +298,7 @@ logoutBtn.addEventListener("click", ()=>{
 
   if (confirmation){
     signOut(auth).then(()=> {
-      window.location.href = "/pages/login/login.html"
+      window.location.href = "/pages/login/index.html"
     }).catch((err) => {
       console.log("Logout Error: ", err)
     })
