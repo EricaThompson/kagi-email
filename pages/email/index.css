@@ -261,7 +261,6 @@ footer {
 }
 
 .subject-message {
-    display: flex;
     font-weight: lighter;
     text-overflow: ellipsis;
     overflow: hidden;

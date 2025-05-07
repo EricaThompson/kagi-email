@@ -88,7 +88,7 @@ async function fetchEmails(){
   
   if (!filteredEmails.length){
     if(folder === "inbox"){
-      return emailBody.innerHTML = "Folder is empty, send an email to yourself (or my.dev.demo.user@gmail.com for the Demo User account) to populate."
+      return emailBody.innerHTML = "Folder is empty, send an email to yourself (or demo@kagi.com for the Demo User account) to populate."
     } else if (folder === "sent") {
       return emailBody.innerHTML = "Folder is empty, send an email to any address to populate."
     } else if (!filteredEmails.length){
@@ -97,13 +97,13 @@ async function fetchEmails(){
   } 
 
   filteredEmails.map(({ body, date, index, subject, to, deleted, encrypted, from, folder })=> {
-    if((to === currentEmail && from === currentEmail ) || (to === currentEmail && from != currentEmail && folder === "sent") || (from === currentEmail && folder === "sent")){
+    if((to === user.email && from === user.email ) || (to === user.email && from != user.email && folder != "sent") || (from === user.email && (folder === "sent" || folder === "trash"))){
 
       const eachEmail = document.createElement("tr");
       eachEmail.classList.add("each-email")
 
       eachEmail.innerHTML =  
-        `<td class="sender">${folder === "sent" ? `<span class="to-label">To:</span> ${to}` : to }</td>
+        `<td class="sender">${folder === ("sent" || "trash") ? `<span class="to-label">To:</span> ${to}` : from }</td>
           <td><div class="subject">${subject}</div>
             <div class="subject-message">
               ${encrypted ? `<label>🔒 Encrypted Message Decrypt?</label><input class="decrypter" type="checkbox"><div id="decryption-form"></div>` : ""}
@@ -122,7 +122,7 @@ async function fetchEmails(){
       const deleteIcon = eachEmail.querySelector(".delete-icon")
       deleteIcon.addEventListener("click", (e)=>{
         e.stopPropagation();
-        deleteEmail(index, deleted);
+        deleteEmail(index, deleted, user.email);
       })
 
       emailBody.appendChild(eachEmail);
@@ -168,7 +168,8 @@ async function fetchEmails(){
           });
         }
       }
-  }}) 
+  }
+}) 
 }
  
 async function sendEmail(e) {
@@ -179,7 +180,6 @@ async function sendEmail(e) {
     const subject = e.target.querySelector('input[type="text"]').value || "🐣 this is a subject"
     let body = e.target.querySelector('textarea').value || "that is the email body"
     const index = await getNewEmailID();
-    const folder = to === user.email ? "inbox" : "sent"
     let encrypted = false;
     
     const passphrase = document.getElementById("encryption-passphrase")?.value;
@@ -195,7 +195,7 @@ async function sendEmail(e) {
     }
 
     try {
-      await sendEmailToDB({to, subject, body, index, folder, encrypted, user})
+      await sendEmailToDB({to, subject, body, index, encrypted, user})
       await fetchEmails();
       document.querySelectorAll('input, textarea').forEach(field => {
         field.value = ''
@@ -210,9 +210,9 @@ async function sendEmail(e) {
     } 
 }
 
-async function deleteEmail(index, deleted){
+async function deleteEmail(index, deleted, userEmail){
   if (!deleted){
-    sendEmailToTrash(index)
+    sendEmailToTrash(index, userEmail)
   } else {
     const confirmed = window.confirm("confirm delete?")
 
@@ -237,6 +237,8 @@ composeButton.addEventListener("click", () => {
   composeEmail.classList.toggle("show-compose-email")
 })
 
+
+
 composeEmail.innerHTML = `
       <section>
         <form id="emailForm" class="form-container">
@@ -245,7 +247,7 @@ composeEmail.innerHTML = `
                   <div><h1>New Email</h1></div> 
                   <div id="close-btn"><button type="button">✖️</button></div>
                 </div>
-                <div><input type="email" class="form-input" placeholder="to:" value="my.dev.demo.user@gmail.com"></div>
+                <div><input type="email" class="form-input" placeholder="to:" value="demo@kagi.com"></div>
                 <div><input type="text" class="form-input" placeholder="subject:" value="Note to Self"></div>
                 <div class="body">
 <textarea type="text" placeholder=" compose: Click "send" to send a demo email.">
