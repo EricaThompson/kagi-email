@@ -20,11 +20,16 @@ const auth = getAuth();
 const demoLoginBtn = document.getElementById("demo-login-btn")
 const emailBtn = document.getElementById("email-btn")
 const emailForm = document.getElementById("email-form")
+const registerLink = document.querySelector(".register-link")
+const registerForm = document.querySelector(".register-form")
 const registerBtn = document.getElementById("register-btn")
+const registerEmail = document.querySelector(".register-email")
+const registerPassword = document.querySelector(".register-password")
+const registerError = document.querySelector(".register-error");
 const loginBtn = document.getElementById("login-btn")
 const loginError = document.querySelector(".login-error")
-const email = document.querySelector('.login-email')
-const password = document.querySelector('.login-password')
+const loginEmail = document.querySelector('.login-email')
+const loginPassword = document.querySelector('.login-password')
 
 const handleRegistration=()=> {
     const email = document.querySelector('.register-email').value
@@ -32,17 +37,10 @@ const handleRegistration=()=> {
 
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed up 
-      const user = userCredential.user;
       window.location.href = "/pages/email/index.html"
-      // go to inbox
-
     })
     .catch((err) => {
-      const errCode = err.code;
-      const errMessage = err.message;
-      console.log("failed reg", errCode, errMessage)
-      // ..
+      registerError.innerHTML = err.message.replace(/^Firebase:\s*/, "")
     });
 }
 
@@ -51,19 +49,16 @@ const handleLogin=(type)=> {
   let password = document.querySelector('.login-password').value
   
   if (type === "demo"){
-    email = "my.dev.demo.user@gmail.com" 
-    password = "demouser"
+    email = "demo@kagi.com" 
+    password = "Kagi-Email"
   } 
     
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      const user = userCredential.user;
       window.location.href = "/pages/email/index.html"
     })
     .catch((err) => {
-      loginError.classList.add("show")
-      const errCode = err.code;
-      const errMessage = err.message;
+      loginError.innerHTML = err.message.replace(/^Firebase:\s*/, "")
     });
 
 }
@@ -73,21 +68,34 @@ demoLoginBtn.addEventListener("click",()=> {
 })
 
 emailBtn.addEventListener("click", () => {
-    emailForm.classList.toggle("show-email-form")
+    emailForm.classList.toggle("show")
 })
 
 loginBtn.addEventListener("click", () => {
   handleLogin()
 })
 
+registerLink.addEventListener("click", ()=>{
+  registerForm.classList.toggle("show")
+  emailForm.classList.remove("show")
+})
+
 registerBtn.addEventListener("click", ()=> {
   handleRegistration()
 })
 
-email.addEventListener("input", ()=> {
-  loginError.classList.remove("show")
+loginEmail.addEventListener("input", ()=> {
+  loginError.innerHTML = ""
 })
 
-password.addEventListener("input", ()=> {
-  loginError.classList.remove("show")
+loginPassword.addEventListener("input", ()=> {
+  loginError.innerHTML = ""
+})
+
+registerEmail.addEventListener("input", ()=> {
+  registerError.innerHTML = ""
+})
+
+registerPassword.addEventListener("input", ()=> {
+  registerError.innerHTML = ""
 })

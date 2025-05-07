@@ -47,20 +47,24 @@ button {
     display: none;
 }
 
-.show-email-form {
-    display: block;
+.register-form {
+    display: none;
 }
 
-.login-error {
-    display: none;
+.login-error, .register-error {
     color: red;
 }
 
 .show {
-    display:block;
+    display: block;
 }
 
-.link {
+.register-link {
+    cursor: pointer;
     margin-top: 15px;
+    font-size: .8rem;
+}
+
+p, a {
     font-size: .8rem;
 }

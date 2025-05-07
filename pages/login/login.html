@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - Kagi</title>
     <link rel="stylesheet" href="../email/index.css" />
     <link rel="stylesheet" href="./login.css" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>✉️</text></svg>">
@@ -11,22 +11,28 @@
 <body>
     <section>
         <section class="container">
-            
             <section class="login">
-                <h1>Kagi Email Login ✉️</h1>
+                <h1>Kagi Email ✉️</h1>
                 <section class="login-types">
-                    <button class="send-btn">Demo User</button>
+                    <button id="demo-login-btn" class="send-btn">Demo User</button>
                     <button id="email-btn" class="send-btn">Email</button>
-                    <button class="send-btn">Anonymous</button>
                 </section>
                 <section id="email-form" class="email-login">
-                    <input class="login-email" type="email" placeholder="email = my.dev.demo.user@gmail.com" value="my.dev.demo.user@gmail.com">
-                    <input class="login-password" type="password" placeholder="password = demouser" value="demouser">
+                    <input class="login-email" type="email" placeholder="email = demo@kagi.com" value="demo@kagi.com">
+                    <input class="login-password" type="password" placeholder="password = Kagi-Email" value="Kagi-Email">
                     <button id="login-btn" class="send-btn">Login</button>
-                    <p class="login-error">Incorrect Login</p>
+                    <p class="login-error"></p>
+                </section>
+                <p class="register-link">No Account? Create Account</p>
+                <section id="register-form" class="register-form">
+                    <h3>Create Account</h3>
+                    <input class="register-email" type="email" placeholder="email" autocomplete="off">
+                    <input class="register-password" type="password" placeholder="password" autocomplete="off">
+                    <button id="register-btn" class="send-btn">Create Account</button>
+                    <p class="register-error">test</p>
+
                 </section>
             </section>
-            <a href="" class="link">No Account? Register</a>
         </section>
     <footer class="footer"><p>erica thompson | <a href="http://ericathompson.github.io" target="_blank">portfolio</a> | <a href="https://www.github.com/ericathompson" target="_blank">github</a></p></footer>
     <script type="module" src="./login.js"></script>
