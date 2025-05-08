@@ -42,12 +42,13 @@ Kagi Email is a vanilla full stack, terminal-inspired web application for email.
   - [x] Seeded for easier testing
   - [x] Pre-populated most fields for ease of testing 
   - [x] Added trash and a second step to confirm deletion from DB
+  - [x] Fully responsive layout for mobile accessibility
 
 ## Setup Instructions
 
 ### Prerequisites
 
-* Vanilla app, so no prerequisites
+* Python3
 
 ### Installation
 
@@ -57,7 +58,7 @@ Kagi Email is a vanilla full stack, terminal-inspired web application for email.
    git clone https://github.com/username/kagi-email-client.git
    ```
 
-2. Update Firebase configuration in `localFirebaseConfig.js`:
+2. Update Firebase configuration in `localFirebaseConfig.js` with the emailed config object.
 
    ```javascript
    const localFirebaseConfig = {
@@ -73,13 +74,21 @@ Kagi Email is a vanilla full stack, terminal-inspired web application for email.
 
 3. Uncomment the `import`s in three files: `/index.js`, `/backend/firebase.js` and `/seed.js`.
 
+4. In the root folder, run:
+   ```bash
+    python3 -m http.server 8000
+   ```
+
+5. Open [http://[::]:8000/](http://[::]:8000/) in the browser
+   
+
 ### Seed Data
 
 Seed data is automatically populated via a `script` tag in `email.html` when the page loads.
 
 ## Usage
 
-* **Demo Login:** Click on "Demo User" to access email without creating an account.
+* **Demo Login:** Click on "Demo User 1" (demo@kagi.com) or "Demo User 2" (test@test.com) to access email without creating an account, you can easily correspond between the two accounts.
 * **Register/Login:** Create a new account or log in with your existing credentials.
 * **Send Email:** Compose and send an email with or without encryption.
 * **Read/Decrypt:** View emails and decrypt, if necessary.
